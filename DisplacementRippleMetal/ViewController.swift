@@ -19,11 +19,12 @@ class ViewController: UIViewController {
     }
     
     func setUpView() {
+        view.backgroundColor = .white
         guard let device = MTLCreateSystemDefaultDevice()
         else {
             fatalError("Device not found")
         }
-        let frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 200))
+        let frame = CGRect(origin: .zero, size: CGSize(width: view.bounds.width, height: 300))
         mtkView = MTKView(frame: frame, device: device)
         renderer = Renderer(device: device, view: mtkView!)
         

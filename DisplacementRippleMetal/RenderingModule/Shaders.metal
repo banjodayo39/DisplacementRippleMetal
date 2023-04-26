@@ -85,9 +85,7 @@ fragment float4 fragment_main(VertexOut vertexIn [[ stage_in ]],
     float FOV = 90.0;
     
     float FOV_SCALE = 20.0 / FOV;
-    // float iTime = vertexIn.time;
     float2 iResolution = vertexIn.resolution;
-    //  float2 uv = vertexIn.position.xy / iResolution.xy - float2(0.5, 0.5);
     uv.y *= iResolution.y / iResolution.x;
     
     float3 rp = float3(0.0, 0.0, fmod(iTime, 100.0));
@@ -111,7 +109,6 @@ fragment float4 fragment_main(VertexOut vertexIn [[ stage_in ]],
         rd = normalize(rr * d * 0.1 + rd);
     }
     
-    constexpr sampler defaultSampler;
     if (d < EPSILON) {
         c += texture.sample(sample2d, (rp.xy + rp.yz) * 0.1).xyz * 0.2;
     }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F4082EE029D30BEA00BB06E9 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4082EDF29D30BEA00BB06E9 /* Renderer.swift */; };
 		F4082EE229D31CC800BB06E9 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F4082EE129D31CC800BB06E9 /* Shaders.metal */; };
+		F43821AB29D6933A000B02F8 /* MontereyShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = F43821AA29D6933A000B02F8 /* MontereyShader.metal */; };
 		F4E481BC29D2A16A00AEB561 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E481BB29D2A16A00AEB561 /* AppDelegate.swift */; };
 		F4E481BE29D2A16A00AEB561 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E481BD29D2A16A00AEB561 /* SceneDelegate.swift */; };
 		F4E481C029D2A16A00AEB561 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E481BF29D2A16A00AEB561 /* ViewController.swift */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		F4082EDF29D30BEA00BB06E9 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		F4082EE129D31CC800BB06E9 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		F43821AA29D6933A000B02F8 /* MontereyShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MontereyShader.metal; sourceTree = "<group>"; };
 		F4E481B829D2A16A00AEB561 /* DisplacementRippleMetal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DisplacementRippleMetal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4E481BB29D2A16A00AEB561 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4E481BD29D2A16A00AEB561 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				F4E481D029D2A28100AEB561 /* TextureLoader.swift */,
 				F4082EDF29D30BEA00BB06E9 /* Renderer.swift */,
 				F4082EE129D31CC800BB06E9 /* Shaders.metal */,
+				F43821AA29D6933A000B02F8 /* MontereyShader.metal */,
 			);
 			path = RenderingModule;
 			sourceTree = "<group>";
@@ -155,6 +158,7 @@
 				F4E481C029D2A16A00AEB561 /* ViewController.swift in Sources */,
 				F4E481BC29D2A16A00AEB561 /* AppDelegate.swift in Sources */,
 				F4E481D129D2A28100AEB561 /* TextureLoader.swift in Sources */,
+				F43821AB29D6933A000B02F8 /* MontereyShader.metal in Sources */,
 				F4082EE029D30BEA00BB06E9 /* Renderer.swift in Sources */,
 				F4E481BE29D2A16A00AEB561 /* SceneDelegate.swift in Sources */,
 			);

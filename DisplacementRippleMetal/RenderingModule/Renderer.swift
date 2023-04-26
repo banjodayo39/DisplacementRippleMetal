@@ -47,8 +47,8 @@ class Renderer: NSObject, MTKViewDelegate {
     var resolution: simd_float2!
  
     var vertices = [
-        Vertex(position:  simd_float4(-1, 1, 0, 1), color: simd_float4(-1, 1, 0, 0), texture: simd_float2(0, 1)),
-        Vertex(position:  simd_float4(-1, -1, 0, 1), color: simd_float4(0, 1, 0, 0), texture: simd_float2(0, 0)),
+        Vertex(position:  simd_float4(-1, 1, 0, 1), color: simd_float4(0.5, 1, 0.6, 0), texture: simd_float2(0, 1)),
+        Vertex(position:  simd_float4(-1, -1, 0, 1), color: simd_float4(0.7, 1, 0.7, 0), texture: simd_float2(0, 0)),
         Vertex(position:  simd_float4(1, -1, 0, 1), color: simd_float4(0.59, 0, 1, 0), texture: simd_float2(1, 0)),
         Vertex(position:  simd_float4(1, 1, 0, 1), color: simd_float4(-1, 1, 0, 0), texture: simd_float2(1,1)),
         
@@ -109,7 +109,7 @@ class Renderer: NSObject, MTKViewDelegate {
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
         
         renderPipelineDescriptor.vertexFunction = library.makeFunction(name: "vertex_main")!
-        renderPipelineDescriptor.fragmentFunction = library.makeFunction(name: "fragment_main")!
+        renderPipelineDescriptor.fragmentFunction = library.makeFunction(name: "fragment_monterey")!
         
         do {
             renderPipelineState = try device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
@@ -129,12 +129,10 @@ class Renderer: NSObject, MTKViewDelegate {
     func updateConstants(view: MTKView) {
         time += 1.0 / Float(view.preferredFramesPerSecond)
         
-        ///let t = abs(sin(time)/2 + 0.5)
-        constant.moveBy = abs(sin(time) - 0.5)
+        constant.moveBy = abs(sin(time) + 0.5)
     }
     
     // MARK: - MTKViewDelegate
-    
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
     }
     
