@@ -1,46 +1,20 @@
 //
-//  Shaders.metal
+//  ConcentricShader.metal
 //  DisplacementRippleMetal
 //
-//  Created by Dayo Banjo on 3/28/23.
+//  Created by Dayo Banjo on 10/15/23.
 //
 
 #include <metal_stdlib>
+#import "ShaderTypes.h"
+
 using namespace metal;
-
-struct VertexIn {
-    float4 position [[attribute(0)]];
-    float4 color    [[attribute(1)]];
-    float2 textureCoordinates [[ attribute(2) ]];
-    
-};
-
-struct Constants {
-    float animatedBy;
-    float2 resolution;
-};
 
 struct VertexOut {
     float4 position [[position]];
     float4 color;
     float2 textureCoordinates;
-    float time;
-    float2 resolution;
 };
-
-
-
-vertex VertexOut vertex_main(const VertexIn vertices [[ stage_in]],
-                               constant Constants &constants [[ buffer(1) ]])
-{
-    VertexOut v;
-    v.position = vertices.position;
-    v.color = vertices.color;
-    v.textureCoordinates = vertices.textureCoordinates;
-    v.time = constants.animatedBy;
-    v.resolution = constants.resolution;
-    return v;
-}
 
 constant float PI = 3.14159265359;
 
@@ -64,14 +38,14 @@ float spiral(float2 m, float repeat, float dir, float t) {
     return v;
 }
 
-fragment float4 fragment_main(VertexOut vertexIn [[ stage_in ]],
-                               sampler sample2d [[ sampler(0) ]],
-                               texture2d<float> texture [[texture(0)]]) {
-    //### Simple Diaplacxement Ripple with Metal swift 
-    float aspect = vertexIn.resolution.x / vertexIn.resolution.y;
-    float2 uv = (float2(vertexIn.position.xy) / vertexIn.resolution.xy * 2.0 - 1.0) * float2(1.0, 1.0 / aspect);
+fragment float4 fragment_concentric(VertexOut vertexIn [[ stage_in ]],
+                                    constant Uniforms &uniforms [[buffer(0)]],
+                                    sampler sample2d [[ sampler(0) ]],
+                                    texture2d<float> texture [[texture(0)]]) {
+    float aspect = uniforms.resolution.x / uniforms.resolution.y;
+    float2 uv = (float2(vertexIn.position.xy) / uniforms.resolution.xy * 2.0 - 1.0) * float2(1.0, 1.0 / aspect);
     float r = length(uv);
-    float iTime = vertexIn.time ;
+    float iTime = sin(uniforms.time) ;
     float c0 = 1.0 - sin(r * r) * 2.0;
     float c1 = concentric(uv, 50.0, iTime * 3.0) * 0.5 + 0.5;
     float c2 = radial(uv, float2(5.0, 30.0), iTime * 4.0) * 0.2 + 0.8;
@@ -85,7 +59,7 @@ fragment float4 fragment_main(VertexOut vertexIn [[ stage_in ]],
     float FOV = 90.0;
     
     float FOV_SCALE = 20.0 / FOV;
-    float2 iResolution = vertexIn.resolution;
+    float2 iResolution = uniforms.resolution;
     uv.y *= iResolution.y / iResolution.x;
     
     float3 rp = float3(0.0, 0.0, fmod(iTime, 100.0));

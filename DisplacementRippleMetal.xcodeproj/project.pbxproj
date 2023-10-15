@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		71874C392ADBB806007A9A3D /* ShaderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874C382ADBB806007A9A3D /* ShaderItem.swift */; };
+		71874C3C2ADBB839007A9A3D /* ShaderListCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874C3B2ADBB839007A9A3D /* ShaderListCollectionView.swift */; };
+		71874C3E2ADBB854007A9A3D /* ShaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71874C3D2ADBB854007A9A3D /* ShaderViewController.swift */; };
+		71874C402ADBC5B3007A9A3D /* ConcentricShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 71874C3F2ADBC5B3007A9A3D /* ConcentricShader.metal */; };
 		F4082EE029D30BEA00BB06E9 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4082EDF29D30BEA00BB06E9 /* Renderer.swift */; };
-		F4082EE229D31CC800BB06E9 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F4082EE129D31CC800BB06E9 /* Shaders.metal */; };
+		F4082EE229D31CC800BB06E9 /* MainShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = F4082EE129D31CC800BB06E9 /* MainShader.metal */; };
 		F43821AB29D6933A000B02F8 /* MontereyShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = F43821AA29D6933A000B02F8 /* MontereyShader.metal */; };
 		F4E481BC29D2A16A00AEB561 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E481BB29D2A16A00AEB561 /* AppDelegate.swift */; };
 		F4E481BE29D2A16A00AEB561 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E481BD29D2A16A00AEB561 /* SceneDelegate.swift */; };
@@ -19,8 +23,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		71874C322ADBB024007A9A3D /* DisplacementRippleMetal-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DisplacementRippleMetal-Bridging-Header.h"; sourceTree = "<group>"; };
+		71874C352ADBB045007A9A3D /* Bridging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridging.h; sourceTree = "<group>"; };
+		71874C362ADBB05A007A9A3D /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
+		71874C382ADBB806007A9A3D /* ShaderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderItem.swift; sourceTree = "<group>"; };
+		71874C3B2ADBB839007A9A3D /* ShaderListCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderListCollectionView.swift; sourceTree = "<group>"; };
+		71874C3D2ADBB854007A9A3D /* ShaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderViewController.swift; sourceTree = "<group>"; };
+		71874C3F2ADBC5B3007A9A3D /* ConcentricShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ConcentricShader.metal; sourceTree = "<group>"; };
 		F4082EDF29D30BEA00BB06E9 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
-		F4082EE129D31CC800BB06E9 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		F4082EE129D31CC800BB06E9 /* MainShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MainShader.metal; sourceTree = "<group>"; };
 		F43821AA29D6933A000B02F8 /* MontereyShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MontereyShader.metal; sourceTree = "<group>"; };
 		F4E481B829D2A16A00AEB561 /* DisplacementRippleMetal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DisplacementRippleMetal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4E481BB29D2A16A00AEB561 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -43,6 +54,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		71874C2F2ADBAED5007A9A3D /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				F4082EE129D31CC800BB06E9 /* MainShader.metal */,
+				F43821AA29D6933A000B02F8 /* MontereyShader.metal */,
+				71874C352ADBB045007A9A3D /* Bridging.h */,
+				71874C362ADBB05A007A9A3D /* ShaderTypes.h */,
+				71874C3F2ADBC5B3007A9A3D /* ConcentricShader.metal */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
+		71874C372ADBB7F6007A9A3D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				71874C382ADBB806007A9A3D /* ShaderItem.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		71874C3A2ADBB81B007A9A3D /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				71874C3B2ADBB839007A9A3D /* ShaderListCollectionView.swift */,
+				71874C3D2ADBB854007A9A3D /* ShaderViewController.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		F4E481AF29D2A16900AEB561 = {
 			isa = PBXGroup;
 			children = (
@@ -69,6 +109,7 @@
 				F4E481C429D2A16B00AEB561 /* Assets.xcassets */,
 				F4E481C629D2A16B00AEB561 /* LaunchScreen.storyboard */,
 				F4E481C929D2A16B00AEB561 /* Info.plist */,
+				71874C322ADBB024007A9A3D /* DisplacementRippleMetal-Bridging-Header.h */,
 			);
 			path = DisplacementRippleMetal;
 			sourceTree = "<group>";
@@ -76,10 +117,11 @@
 		F4E481CF29D2A24E00AEB561 /* RenderingModule */ = {
 			isa = PBXGroup;
 			children = (
+				71874C3A2ADBB81B007A9A3D /* UI */,
+				71874C372ADBB7F6007A9A3D /* Model */,
+				71874C2F2ADBAED5007A9A3D /* Shaders */,
 				F4E481D029D2A28100AEB561 /* TextureLoader.swift */,
 				F4082EDF29D30BEA00BB06E9 /* Renderer.swift */,
-				F4082EE129D31CC800BB06E9 /* Shaders.metal */,
-				F43821AA29D6933A000B02F8 /* MontereyShader.metal */,
 			);
 			path = RenderingModule;
 			sourceTree = "<group>";
@@ -116,6 +158,7 @@
 				TargetAttributes = {
 					F4E481B729D2A16A00AEB561 = {
 						CreatedOnToolsVersion = 14.2;
+						LastSwiftMigration = 1500;
 					};
 				};
 			};
@@ -154,11 +197,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4082EE229D31CC800BB06E9 /* Shaders.metal in Sources */,
+				F4082EE229D31CC800BB06E9 /* MainShader.metal in Sources */,
+				71874C392ADBB806007A9A3D /* ShaderItem.swift in Sources */,
 				F4E481C029D2A16A00AEB561 /* ViewController.swift in Sources */,
 				F4E481BC29D2A16A00AEB561 /* AppDelegate.swift in Sources */,
+				71874C3C2ADBB839007A9A3D /* ShaderListCollectionView.swift in Sources */,
 				F4E481D129D2A28100AEB561 /* TextureLoader.swift in Sources */,
+				71874C402ADBC5B3007A9A3D /* ConcentricShader.metal in Sources */,
 				F43821AB29D6933A000B02F8 /* MontereyShader.metal in Sources */,
+				71874C3E2ADBB854007A9A3D /* ShaderViewController.swift in Sources */,
 				F4082EE029D30BEA00BB06E9 /* Renderer.swift in Sources */,
 				F4E481BE29D2A16A00AEB561 /* SceneDelegate.swift in Sources */,
 			);
@@ -297,6 +344,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CNG79B32AZ;
@@ -314,6 +362,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.banjodayo.DisplacementRippleMetal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "DisplacementRippleMetal/DisplacementRippleMetal-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -324,6 +374,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CNG79B32AZ;
@@ -341,6 +392,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.banjodayo.DisplacementRippleMetal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "DisplacementRippleMetal/DisplacementRippleMetal-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

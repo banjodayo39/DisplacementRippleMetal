@@ -9,12 +9,6 @@ import Foundation
 import UIKit
 import Metal
 import MetalKit
-import simd
-
-struct Constants  {
-    var moveBy: Float = 0
-    var resolution: SIMD2<Float> = .zero;
-}
 
 struct Vertex {
     var position: simd_float4
@@ -25,27 +19,28 @@ struct Vertex {
 let MaxOutstandingFrameCount = 3
 
 class Renderer: NSObject, MTKViewDelegate {
-    let device: MTLDevice
-    let commandQueue: MTLCommandQueue
-    let view: MTKView
-    
-    var time: Float = 0.0
-    
     private var renderPipelineState: MTLRenderPipelineState!
-    
     private var frameSemaphore = DispatchSemaphore(value: MaxOutstandingFrameCount)
     private var frameIndex: Int
     
     private var vertexBuffer: MTLBuffer?
     private var indexBuffer: MTLBuffer?
     
-    var constant = Constants()
-    var texture: MTLTexture?
-    var sampleState: MTLSamplerState?
-    lazy var screenSize = view.bounds.size
-    let screenScale = UIScreen.main.scale 
-    var resolution: simd_float2!
- 
+    private let device: MTLDevice
+    private let commandQueue: MTLCommandQueue
+    private let view: MTKView
+    
+    private let vertexFunctionName: String
+    private let fragmentFunctionName: String
+    private let kernelFunctionName: String?
+    
+    private var texture: MTLTexture?
+    private var sampleState: MTLSamplerState?
+    private var renderingElapsedTime: TimeInterval = .zero
+    private var previousRenderElapsedTime: TimeInterval = .zero
+    
+    var touchPoint: CGPoint = .zero
+    
     var vertices = [
         Vertex(position:  simd_float4(-1, 1, 0, 1), color: simd_float4(0.5, 1, 0.6, 0), texture: simd_float2(0, 1)),
         Vertex(position:  simd_float4(-1, -1, 0, 1), color: simd_float4(0.7, 1, 0.7, 0), texture: simd_float2(0, 0)),
@@ -55,13 +50,19 @@ class Renderer: NSObject, MTKViewDelegate {
     ]
     var indicies: [UInt16] = [0, 1, 2,2, 3, 0]
     
-    init(device: MTLDevice, view: MTKView) {
+    init(device: MTLDevice,
+         view: MTKView,
+         vertexFunctionName: String = "vertex_main",
+         fragmentFunctionName: String = "fragment_main",
+         kernelFunctionName: String? = nil
+    ) {
         self.device = device
         self.commandQueue = device.makeCommandQueue()!
         self.view = view
         self.frameIndex = 0
-        
-        
+        self.vertexFunctionName = vertexFunctionName
+        self.fragmentFunctionName = fragmentFunctionName
+        self.kernelFunctionName = kernelFunctionName
         super.init()
         
         view.device = device
@@ -73,14 +74,14 @@ class Renderer: NSObject, MTKViewDelegate {
         buildSamplerState()
     }
     
-    func buildSamplerState() {
+    private func buildSamplerState() {
         let descriptor = MTLSamplerDescriptor()
         descriptor.minFilter = .linear
         descriptor.magFilter = .linear
         sampleState = device.makeSamplerState(descriptor: descriptor)
     }
     
-    func makePipeline() {
+    private func makePipeline() {
         
         texture = TexturableLoader.setTexturable(device: device, name: "burriedhourglass")
         guard let library = device.makeDefaultLibrary() else {
@@ -108,8 +109,13 @@ class Renderer: NSObject, MTKViewDelegate {
         
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
         
-        renderPipelineDescriptor.vertexFunction = library.makeFunction(name: "vertex_main")!
-        renderPipelineDescriptor.fragmentFunction = library.makeFunction(name: "fragment_monterey")!
+        guard let vertexFunction = library.makeFunction(name: vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: fragmentFunctionName)
+        else {
+            fatalError("Please add both vertex and fragment funciton")
+        }
+        renderPipelineDescriptor.vertexFunction = vertexFunction
+        renderPipelineDescriptor.fragmentFunction = fragmentFunction
         
         do {
             renderPipelineState = try device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
@@ -118,39 +124,36 @@ class Renderer: NSObject, MTKViewDelegate {
         }
     }
     
-    func makeResources() {
-        resolution = simd_float2(Float(screenSize.width * screenScale), Float(screenSize.height * screenScale))
-        
-        constant.resolution = resolution
+    private func makeResources() {
         vertexBuffer = device.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Vertex>.size)
         indexBuffer = device.makeBuffer(bytes: indicies, length: indicies.count * MemoryLayout<UInt16>.size)
     }
     
-    func updateConstants(view: MTKView) {
-        time += 1.0 / Float(view.preferredFramesPerSecond)
-        
-        constant.moveBy = abs(sin(time) + 0.5)
-    }
-    
     // MARK: - MTKViewDelegate
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-    }
+    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     
     func draw(in view: MTKView) {
         frameSemaphore.wait()
-        updateConstants(view: view)
         
         guard let renderPassDescriptor = view.currentRenderPassDescriptor,
               let indexBuffer = indexBuffer,
               let sampleState = sampleState
         else { return }
         
+        let currentTime = CACurrentMediaTime()
+        let timestep = currentTime - previousRenderElapsedTime
+        
+        var uniforms = Uniforms(resolution: SIMD2<Float>(Float(view.drawableSize.width),
+                                                         Float(view.drawableSize.height)),
+                                mouse: SIMD2<Float>(Float(touchPoint.x), Float(touchPoint.y)),
+                                time: Float(renderingElapsedTime))
+        
         guard let commandBuffer = commandQueue.makeCommandBuffer() else { return }
         
         let renderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         renderCommandEncoder.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
-        renderCommandEncoder.setVertexBytes(&constant, length: MemoryLayout<Constants>.stride, index: 1)
+        renderCommandEncoder.setFragmentBytes(&uniforms, length: MemoryLayout<Uniforms>.stride, index: 0)
         renderCommandEncoder.setFragmentTexture(texture, index: 0)
         renderCommandEncoder.setFragmentSamplerState(sampleState, index: 0)
         
@@ -170,5 +173,7 @@ class Renderer: NSObject, MTKViewDelegate {
         commandBuffer.commit()
         
         frameIndex += 1
+        renderingElapsedTime += timestep
+        previousRenderElapsedTime = currentTime
     }
 }

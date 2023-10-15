@@ -7,33 +7,12 @@
 
 #include <metal_stdlib>
 using namespace metal;
-
-
-struct VertexIn {
-    float4 position [[attribute(0)]];
-    float4 color    [[attribute(1)]];
-    float2 textureCoordinates [[ attribute(2) ]];
-    
-};
-
-struct Constants {
-    float animatedBy;
-    float2 resolution;
-};
+#import "ShaderTypes.h"
 
 struct VertexOut {
     float4 position [[position]];
     float4 color;
     float2 textureCoordinates;
-    float time;
-    float2 resolution;
-};
-
-// Buffer with uniform variables
-struct Uniforms {
-    float time;
-    float resolutionX;
-    float resolutionY;
 };
 
 float sin_shape(float2 uv, float offset_y, float time) {
@@ -44,7 +23,7 @@ float sin_shape(float2 uv, float offset_y, float time) {
     for (int i=0; i<5; i++) {
         x*=0.53562;
         x+=6.56248;
-        y+=sin(x)*a;        
+        y+=sin(x)*a;
         a*=.5;
     }
     float y0 = step(0.0, y * 0.08 - uv.y + offset_y);
@@ -76,17 +55,18 @@ float3 spectrumWaves(float2 uv, float time) {
     } else {
         fragColor = float3(0.94, 0.00, 0.14); // vermillion red
     }
-
+    
     return fragColor;
 }
 
 fragment half4 fragment_monterey(VertexOut vertexIn [[ stage_in ]],
-                                sampler sample2d [[ sampler(0) ]],
-                                texture2d<float> texture [[texture(0)]])
+                                 constant Uniforms &uniforms [[buffer(0)]],
+                                 sampler sample2d [[ sampler(0) ]],
+                                 texture2d<float> texture [[texture(0)]])
 {
     float2 fragCoord = vertexIn.position.xy;
-    float2 resolution = vertexIn.resolution;
-    float time = vertexIn.time;
+    float2 resolution = uniforms.resolution;
+    float time = uniforms.time;
     fragCoord = rotate(fragCoord + float2(0.0, -300.0), 0.5);
     
     // Normalized pixel coordinates (from 0 to 1)
@@ -100,8 +80,9 @@ fragment half4 fragment_monterey(VertexOut vertexIn [[ stage_in ]],
     float2 uv = fragCoord / resolution.xy;
     float4 tex_color = texture.sample(sample2d, uv);
     fragColor.xyz *= (uv.y * 1.08 + 0.65) * tex_color.xyz;
-
+    
     return half4(half3(col3), 1.0);
 }
+
 
 
